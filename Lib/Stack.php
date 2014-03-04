@@ -6,11 +6,22 @@ class Stack
 {
 	private $data = [];
 
+	/**
+	 * Impinge un element in capul stivei.
+	 *
+	 * @param  mixed $element
+	 * @return mixed
+	 */
 	public function push($element)
 	{
-		$this->data[] = $element;
+		return $this->data[] = $element;
 	}
 
+	/**
+	 * Inlatura un element din stiva, returnandu-i valoarea.
+	 * 	
+	 * @return mixed
+	 */
 	public function pop()
 	{
 		if ($this->size() > 0)
@@ -20,6 +31,11 @@ class Stack
 		throw new EmptyStackAccessException;
 	}
 
+	/**
+	 * Returneaza elementul din capul stivei.
+	 * 
+	 * @return mixed
+	 */
 	public function top()
 	{
 		$size = $this->size();
@@ -31,11 +47,21 @@ class Stack
 		throw new EmptyStackAccessException;
 	}
 
+	/**
+	 * Indeparteaza toate elementele stivei.
+	 * 
+	 * @return void
+	 */
 	public function clear()
 	{
 		$this->data = [];
 	}
 
+	/**
+	 * Returneaza numarul de elemente din stiva.
+	 * 
+	 * @return int
+	 */
 	public function size()
 	{
 		return count($this->data);

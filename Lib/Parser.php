@@ -10,17 +10,17 @@ class Parser
 	protected $tokens;
 
 	protected $operators = [
-		'#' => 0,
-		'+' => 1,
-		'-' => 1,
-		'*' => 2,
-		'/' => 2,
-		'^' => 3,
+		Operator::SENTINEL => 0,
+		Operator::PLUS => 1,
+		Operator::MINUS => 1,
+		Operator::PROD => 2,
+		Operator::DIV => 2,
+		Operator::POW => 3,
 	];
 
 	public function __construct($str)
 	{
-		$str = '#' . str_replace(' ', '', $str) . '#';
+		$str = Operator::SENTINEL . str_replace(' ', '', $str) . Operator::SENTINEL;
 		$this->tokens = $this->tokenize($str);
 	}
 
@@ -37,29 +37,29 @@ class Parser
 	}
 
 	/**
-	 * Preia in prioritatea din token-ul
-	 * @param  array $token
-	 * @return int 
+	 * Rezolva o expresie intre 2 operanzi.
+	 * 
+	 * @param  numeric $op1
+	 * @param  numeric $op2
+	 * @param  char $op_type
+	 * @return numeric
 	 */
-	protected function getPriority($token)
-	{
-		return $token[1];
-	}
-
 	protected function solve($op1, $op2, $op_type)
 	{
 		switch ($op_type)
 		{
-			case '+': return $op1 + $op2;
-			case '-': return $op1 - $op2;
-			case '*': return $op1 * $op2;
-			case '/': return $op1 / $op2;
-			case '^': return pow($op1, $op2);
+			case Operator::PLUS: return $op1 + $op2;
+			case Operator::MINUS: return $op1 - $op2;
+			case Operator::PROD: return $op1 * $op2;
+			case Operator::DIV: return $op1 / $op2;
+			case Operator::POW: return pow($op1, $op2);
 		}
 		return 0;
 	}
 
 	/**
+	 * Parser::evaluate()
+	 * 
 	 * Executa operatiile necesare interpretarii expresiilor folosind metoda celor 2 stive.
 	 * @return int/float
 	 */
@@ -94,11 +94,11 @@ class Parser
 
 					while ($operatorTop->priority >= $priority + $this->operators[$token])
 					{
-						if ($token == '#' && $operatorTop->equals('#'))
+						if ($token == Operator::SENTINEL && $operatorTop->equals(Operator::SENTINEL))
 						{
 							break;
 						}
-
+						
 						$top = $operands->pop();
 						$beforeTop = $operands->pop();
 
@@ -108,7 +108,8 @@ class Parser
 
 						$opDone++;
 
-						if ($operatorTop->priority < $this->operators[$token] || ($operatorTop->equals($token) && $token == '#'))
+						if ($operatorTop->priority < $this->operators[$token] || 
+							($operatorTop->equals($token) && $token == Operator::SENTINEL))
 						{
 							$opDone = 0;
 						}
