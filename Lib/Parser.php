@@ -33,7 +33,8 @@ class Parser
 	 */
 	protected function tokenize($str)
 	{
-		return str_split($str);
+		preg_match_all('#[^\d.]|[\d.]++#', $str, $out);
+		return $out[0];
 	}
 
 	/**
